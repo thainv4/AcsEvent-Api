@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "VhC8IHkqjYh19Cz7MuPirSZlggd7OrPVi5F8XBtx3BQ=",
+  "Source": "AcsEvent",
+  "BasePath": "_content/AcsEvent",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

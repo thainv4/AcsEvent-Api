@@ -1,0 +1,118 @@
+[
+  {
+    "ContainingType": "AcsEvent.Controllers.AcsEventController",
+    "Method": "GetAttendanceByPhongBan",
+    "RelativePath": "api/AcsEvent/attendance-by-phongban",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "phongBanId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AcsEvent.Controllers.AcsEventController",
+    "Method": "GetAcsEvents",
+    "RelativePath": "api/AcsEvent/get-acs-events",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "AcsEvent.DTOs.AcsEvent.GetAcsEventRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AcsEvent.Controllers.EmployeeController",
+    "Method": "AddEmployeeInfo",
+    "RelativePath": "api/Employee",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "employeeInfo",
+        "Type": "AcsEvent.Entities.EmployeeInfo",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AcsEvent.Controllers.PhongBanController",
+    "Method": "AddPhongBan",
+    "RelativePath": "api/PhongBan",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "phongBanDto",
+        "Type": "AcsEvent.DTOs.PhongBan.AddPhongBanRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AcsEvent.Controllers.PhongBanController",
+    "Method": "GetAllPhongBans",
+    "RelativePath": "api/PhongBan",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AcsEvent.Controllers.ThietBiController",
+    "Method": "AddThietBi",
+    "RelativePath": "api/ThietBi",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "thietBiDto",
+        "Type": "AcsEvent.DTOs.ThietBi.AddThietBiRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AcsEvent.Controllers.ThietBiController",
+    "Method": "GetAllThietBis",
+    "RelativePath": "api/ThietBi",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AcsEvent.Controllers.ThietBiController",
+    "Method": "GetThietBiById",
+    "RelativePath": "api/ThietBi/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
