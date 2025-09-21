@@ -143,3 +143,4 @@ E:\SourceCode\AcsEvent\AcsEvent\obj\Release\net8.0\refint\AcsEvent.dll
 E:\SourceCode\AcsEvent\AcsEvent\obj\Release\net8.0\AcsEvent.pdb
 E:\SourceCode\AcsEvent\AcsEvent\obj\Release\net8.0\AcsEvent.genruntimeconfig.cache
 E:\SourceCode\AcsEvent\AcsEvent\obj\Release\net8.0\ref\AcsEvent.dll
+E:\SourceCode\AcsEvent\AcsEvent\obj\Release\net8.0\AcsEvent.sourcelink.json

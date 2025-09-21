@@ -143,3 +143,4 @@ E:\SourceCode\AcsEvent\AcsEvent\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.
 E:\SourceCode\AcsEvent\AcsEvent\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 E:\SourceCode\AcsEvent\AcsEvent\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 E:\SourceCode\AcsEvent\AcsEvent\bin\Debug\net8.0\AutoMapper.dll
+E:\SourceCode\AcsEvent\AcsEvent\obj\Debug\net8.0\AcsEvent.sourcelink.json

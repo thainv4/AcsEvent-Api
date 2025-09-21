@@ -119,7 +119,7 @@ public class HikvisionService
             }
 
             {
-                var errorContent = await initialResponse.Content.ReadAsStringAsync();
+                await initialResponse.Content.ReadAsStringAsync();
                 return null;
             }
         }

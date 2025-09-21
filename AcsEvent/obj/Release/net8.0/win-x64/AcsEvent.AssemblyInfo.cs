@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AcsEvent")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6381a6ba3fc2e184d5f563ed5986ac32290d1713")]
 [assembly: System.Reflection.AssemblyProductAttribute("AcsEvent")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AcsEvent")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
