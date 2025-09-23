@@ -73,7 +73,7 @@ public class AcsEventController : ControllerBase
             var result = await _hikvisionService.CallAcsEventApiAsync(authInfo, requestBody);
 
             // Parse và format lại JSON response
-            var parsedData = ParseAndFormatResult(result);
+            var parsedData = ParseAndFormatResultHelper.ParseAndFormatResult(result);
 
             return Ok(new
             {
@@ -97,7 +97,7 @@ public class AcsEventController : ControllerBase
 
     [HttpPost("attendance-by-phongban")]
     public async Task<IActionResult> GetAttendanceByPhongBan([FromBody] int phongBanId, int pageNumber = 1,
-       int pageSize = 10)
+        int pageSize = 15)
     {
         try
         {
@@ -110,6 +110,7 @@ public class AcsEventController : ControllerBase
                 });
             }
 
+            // Get all employees in the department
             var employees = await _employeeService.GetEmployeesByPhongBanIdAsync(phongBanId);
             var authInfos = await _thietBiService.GetThietBiAuthInfosAsync();
             var allRecords = new List<InfoRecord>();
@@ -161,73 +162,12 @@ public class AcsEventController : ControllerBase
                 }
             }
 
-            // Process all collected records
-            var formattedAttendance = allRecords
+            // Process attendance records
+            var attendanceByEmployee = allRecords
                 .GroupBy(r => new { r.employeeNoString, r.name, Date = DateTime.Parse(r.time).Date })
-                .Select(g =>
-                {
-                    var morning = g
-                        .Where(x => DateTime.Parse(x.time).Hour < 12)
-                        .OrderBy(x => DateTime.Parse(x.time))
-                        .FirstOrDefault();
-
-                    var afternoon = g
-                        .Where(x => DateTime.Parse(x.time).Hour >= 12)
-                        .OrderByDescending(x => DateTime.Parse(x.time))
-                        .FirstOrDefault();
-
-                    return new
-                    {
-                        macc = g.Key.employeeNoString,
-                        name = g.Key.name,
-                        date = g.Key.Date.ToString("yyyy-MM-dd"),
-                        firstin = morning?.time,
-                        lastout = afternoon?.time
-                    };
-                })
-                .ToList();
-
-            // Apply pagination
-            var totalRecords = formattedAttendance.Count;
-            var pagedData = formattedAttendance
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            // Create paged response using PaginationHelper
-            var pagedResponse = PaginationHelper.CreatePagedResponse(
-                pagedData,
-                pageNumber,
-                pageSize,
-                totalRecords);
-
-            return Ok(pagedResponse);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error in GetAttendanceByPhongBan");
-            return BadRequest(new
-            {
-                success = false,
-                error = ex.Message
-            });
-        }
-    }
-
-    private object ParseAndFormatResult(string result)
-    {
-        try
-        {
-            var doc = JsonDocument.Parse(result);
-
-            if (doc.RootElement.TryGetProperty("AcsEvent", out var acsEvent) &&
-                acsEvent.TryGetProperty("InfoList", out var infoList))
-            {
-                var records = JsonSerializer.Deserialize<List<InfoRecord>>(infoList.GetRawText());
-
-                var grouped = records
-                    .GroupBy(r => new { r.employeeNoString, r.name, Date = DateTime.Parse(r.time).Date })
-                    .Select(g =>
+                .ToDictionary(
+                    g => g.Key.employeeNoString,
+                    g =>
                     {
                         var morning = g
                             .Where(x => DateTime.Parse(x.time).Hour < 12)
@@ -249,15 +189,64 @@ public class AcsEventController : ControllerBase
                         };
                     });
 
-                return grouped.ToList();
-            }
+            // Create a complete list with all employees, including those without attendance
+            var completeAttendanceList = employees
+                .Select(e =>
+                {
+                    if (attendanceByEmployee.TryGetValue(e.MaCC.ToString(), out var attendance))
+                    {
+                        // Use manv from database (e.MaCC) instead of attendance.macc
+                        return new
+                        {
+                            manv = e.MaNV.ToString(),
+                            name = e.HoTen,
+                            date = attendance.date,
+                            firstin = attendance.firstin,
+                            lastout = attendance.lastout
+                        };
+                    }
 
-            return new List<object>();
+                    return new
+                    {
+                        manv = e.MaCC.ToString(),
+                        name = e.HoTen,
+                        date = DateTime.Today.ToString("yyyy-MM-dd"),
+                        firstin = (string)null,
+                        lastout = (string)null
+                    };
+                })
+                .OrderBy(item => {
+                    // Split name into parts and sort by the last part (given name)
+                    string[] nameParts = item.name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    return nameParts.Length > 0 ? nameParts[nameParts.Length - 1] : item.name;
+                })
+                .ToList();
+
+
+            // Apply pagination
+            var totalRecords = completeAttendanceList.Count;
+            var pagedData = completeAttendanceList
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Create paged response using PaginationHelper
+            var pagedResponse = PaginationHelper.CreatePagedResponse(
+                pagedData,
+                pageNumber,
+                pageSize,
+                totalRecords);
+
+            return Ok(pagedResponse);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error parsing result: {result}");
-            return new List<object>();
+            _logger.LogError(ex, "Error in GetAttendanceByPhongBan");
+            return BadRequest(new
+            {
+                success = false,
+                error = ex.Message
+            });
         }
     }
 }

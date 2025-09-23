@@ -23,7 +23,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://192.168.200.56:8080", "http://localhost:8080")
+        policy.WithOrigins(
+                "http://localhost:5173",
+                "http://192.168.200.56:8080",
+                "http://localhost:8080",
+                "https://dilam.bachmai.gov.vn")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -33,13 +37,13 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowFrontend"); 
+app.UseCors("AllowFrontend");
 
 app.MapControllers();
 

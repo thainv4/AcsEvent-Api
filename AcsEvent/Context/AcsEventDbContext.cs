@@ -1,4 +1,5 @@
 using AcsEvent.Entities;
+using AcsEvent.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AcsEvent.Context;
@@ -8,6 +9,7 @@ public class AcsEventDbContext : DbContext
     public DbSet<EmployeeInfo?> EmployeeInfos { get; set; }
     public DbSet<PhongBan> PhongBans { get; set; }
     public DbSet<ThietBi> ThietBis { get; set; }
+    public DbSet<CheckInOut> CheckInOuts { get; set; }
     
     public AcsEventDbContext(DbContextOptions<AcsEventDbContext> options) : base(options)
     {
@@ -54,6 +56,17 @@ public class AcsEventDbContext : DbContext
             entity.Property(e => e.IP).HasMaxLength(50);
             entity.Property(e => e.username).HasMaxLength(50);
             entity.Property(e => e.password).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<CheckInOut>(entity =>
+        {
+            entity.HasKey(e => e.MaNV);
+            entity.Property(e => e.MaNV).HasMaxLength(50);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.TimeIn);
+            entity.Property(e => e.TimeOut);
+            entity.Property(e => e.DiMuon);
+            entity.Property(e => e.VeSom);
         });
     }
 }
