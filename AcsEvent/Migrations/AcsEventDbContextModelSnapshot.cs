@@ -101,28 +101,35 @@ namespace AcsEvent.Migrations
 
             modelBuilder.Entity("AcsEvent.Models.CheckInOut", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("DiMuon")
+                        .HasColumnType("bit");
+
                     b.Property<string>("MaNV")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("DiMuon")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTimeOffset>("TimeIn")
+                    b.Property<DateTimeOffset?>("TimeIn")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("TimeOut")
+                    b.Property<DateTimeOffset?>("TimeOut")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("VeSom")
+                    b.Property<bool?>("VeSom")
                         .HasColumnType("bit");
 
-                    b.HasKey("MaNV");
+                    b.HasKey("Id");
 
                     b.ToTable("CheckInOuts");
                 });

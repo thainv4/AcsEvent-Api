@@ -1,3 +1,4 @@
+using AcsEvent.Interface;
 using AcsEvent.Mapping;
 using AcsEvent.Services;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,10 @@ builder.Services.AddAutoMapper(_ => { }, typeof(GeneralProfile).Assembly);
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<ThietBiService>();
 builder.Services.AddScoped<HikvisionService>();
-builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<IPhongBanService, PhongBanService>();
+builder.Services.AddHostedService<AttendanceBackgroundService>();
 
 // Add CORS
 builder.Services.AddCors(options =>

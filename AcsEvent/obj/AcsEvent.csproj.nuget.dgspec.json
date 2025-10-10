@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "E:\\SourceCode\\AcsEvent\\AcsEvent\\AcsEvent.csproj": {}
+    "D:\\Source_Code\\AcsEvent\\acsevent\\AcsEvent.csproj": {}
   },
   "projects": {
-    "E:\\SourceCode\\AcsEvent\\AcsEvent\\AcsEvent.csproj": {
+    "D:\\Source_Code\\AcsEvent\\acsevent\\AcsEvent.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\SourceCode\\AcsEvent\\AcsEvent\\AcsEvent.csproj",
+        "projectUniqueName": "D:\\Source_Code\\AcsEvent\\acsevent\\AcsEvent.csproj",
         "projectName": "AcsEvent",
-        "projectPath": "E:\\SourceCode\\AcsEvent\\AcsEvent\\AcsEvent.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "E:\\SourceCode\\AcsEvent\\AcsEvent\\obj\\",
+        "projectPath": "D:\\Source_Code\\AcsEvent\\acsevent\\AcsEvent.csproj",
+        "packagesPath": "C:\\Users\\viett\\.nuget\\packages\\",
+        "outputPath": "D:\\Source_Code\\AcsEvent\\acsevent\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\viett\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -97,7 +97,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.414/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

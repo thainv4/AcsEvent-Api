@@ -1,5 +1,4 @@
 using System.Net.Http.Headers;
-using System.Net.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -137,7 +136,6 @@ public class HikvisionService
         {
             _logger.LogError(ex, $"Error calling Hikvision API at {authInfo.IP}");
             return null;
-            
         }
     }
 
@@ -269,4 +267,55 @@ public class HikvisionService
         rng.GetBytes(bytes);
         return Convert.ToHexString(bytes).ToLowerInvariant();
     }
+
+    public async Task<bool> IsDeviceConnected(ThietBiAuthorDto device)
+        {
+            try
+            {
+                string deviceInfoUrl = $"http://{device.IP}/ISAPI/System/deviceInfo";
+    
+                // First request to get the digest challenge
+                using var httpClient = new HttpClient();
+                httpClient.Timeout = TimeSpan.FromSeconds(5);
+    
+                var initialRequest = new HttpRequestMessage(HttpMethod.Get, deviceInfoUrl);
+                var initialResponse = await httpClient.SendAsync(initialRequest);
+    
+                // If unauthorized and digest auth is required
+                if (initialResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    var wwwAuthHeader = initialResponse.Headers.WwwAuthenticate.FirstOrDefault();
+    
+                    if (wwwAuthHeader != null && wwwAuthHeader.Scheme.Equals("Digest", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Create digest auth header
+                        var authHeader = CreateDigestAuthHeader(
+                            device.username,
+                            device.password,
+                            "GET",
+                            "/ISAPI/System/deviceInfo",
+                            wwwAuthHeader.Parameter);
+    
+                        // Create new request with auth header
+                        var authenticatedRequest = new HttpRequestMessage(HttpMethod.Get, deviceInfoUrl);
+                        authenticatedRequest.Headers.Authorization = new AuthenticationHeaderValue("Digest", authHeader);
+    
+                        // Send authenticated request
+                        var authenticatedResponse = await httpClient.SendAsync(authenticatedRequest);
+    
+                        _logger.LogInformation(
+                            $"Device connectivity check for {device.IP}: {authenticatedResponse.StatusCode}");
+                        return authenticatedResponse.IsSuccessStatusCode;
+                    }
+                }
+    
+                _logger.LogInformation($"Device connectivity check for {device.IP}: {initialResponse.StatusCode}");
+                return initialResponse.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Device at {device.IP} is not responding: {ex.Message}");
+                return false;
+            }
+        }
 }

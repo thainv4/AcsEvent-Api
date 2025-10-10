@@ -1,10 +1,11 @@
 using AcsEvent.Context;
 using AcsEvent.Entities;
+using AcsEvent.Interface;
 using Microsoft.EntityFrameworkCore;
 
 namespace AcsEvent.Services;
 
-public class EmployeeService
+public class EmployeeService : IEmployeeService
 {
     private readonly AcsEventDbContext _context;
     
@@ -22,4 +23,5 @@ public class EmployeeService
         
         return await Task.FromResult(_context.EmployeeInfos.Where(x => x.MaPb == phongBanId).ToList());
     }
+    
 }

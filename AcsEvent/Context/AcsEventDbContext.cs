@@ -60,7 +60,7 @@ public class AcsEventDbContext : DbContext
 
         modelBuilder.Entity<CheckInOut>(entity =>
         {
-            entity.HasKey(e => e.MaNV);
+            entity.HasKey(e => e.Id);
             entity.Property(e => e.MaNV).HasMaxLength(50);
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.TimeIn);
