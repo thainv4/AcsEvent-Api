@@ -26,11 +26,11 @@ public class AttendanceService : IAttendanceService
         _logger = logger;
     }
     
-    public async Task<List<AttendanceResponseDto>> GetAttendanceByPhongBanAsync(int phongBanId)
+    public async Task<List<AttendanceResponseDto>> GetAttendanceByPhongBanAsync(int phongBanId, DateTime? date = null)
     {
-        DateTime today = DateTime.Today;
-        DateTime startTime = new DateTime(today.Year, today.Month, today.Day, 0, 0, 0);
-        DateTime endTime = new DateTime(today.Year, today.Month, today.Day, 23, 59, 59);
+        DateTime targetDate = date ?? DateTime.Today;
+        DateTime startTime = new DateTime(targetDate.Year, targetDate.Month, targetDate.Day, 0, 0, 0);
+        DateTime endTime = new DateTime(targetDate.Year, targetDate.Month, targetDate.Day, 23, 59, 59);
 
         var employees = await _employeeService.GetEmployeesByPhongBanIdAsync(phongBanId);
         var authInfos = await _thietBiService.GetThietBiAuthInfosAsync();
@@ -143,7 +143,8 @@ public class AttendanceService : IAttendanceService
             })
             .ToList();
     }
-
+    
+    
     /*public async Task<int> CountAttendanceLateAsync(int phongBanId, DateTimeOffset date)
     {
         try

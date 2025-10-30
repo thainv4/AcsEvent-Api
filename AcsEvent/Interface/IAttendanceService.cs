@@ -4,5 +4,5 @@ namespace AcsEvent.Interface;
 
 public interface IAttendanceService
 {
-    Task<List<AttendanceResponseDto>> GetAttendanceByPhongBanAsync(int phongBanId);
+    Task<List<AttendanceResponseDto>> GetAttendanceByPhongBanAsync(int phongBanId, DateTime? date = null);
 }

@@ -1,6 +1,11 @@
 D:\Source_Code\AcsEvent\publish\AcsEvent.exe
+D:\Source_Code\AcsEvent\publish\publish\web.config
 D:\Source_Code\AcsEvent\publish\appsettings.Development.json
 D:\Source_Code\AcsEvent\publish\appsettings.json
+D:\Source_Code\AcsEvent\publish\publish\AcsEvent.deps.json
+D:\Source_Code\AcsEvent\publish\publish\AcsEvent.runtimeconfig.json
+D:\Source_Code\AcsEvent\publish\publish\appsettings.Development.json
+D:\Source_Code\AcsEvent\publish\publish\appsettings.json
 D:\Source_Code\AcsEvent\publish\AcsEvent.dll
 D:\Source_Code\AcsEvent\publish\AcsEvent.runtimeconfig.json
 D:\Source_Code\AcsEvent\publish\AcsEvent.pdb

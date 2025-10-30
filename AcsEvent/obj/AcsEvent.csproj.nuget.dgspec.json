@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Source_Code\\AcsEvent\\acsevent\\AcsEvent.csproj": {}
+    "D:\\Source_Code\\AcsEvent\\AcsEvent\\AcsEvent.csproj": {}
   },
   "projects": {
-    "D:\\Source_Code\\AcsEvent\\acsevent\\AcsEvent.csproj": {
+    "D:\\Source_Code\\AcsEvent\\AcsEvent\\AcsEvent.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Source_Code\\AcsEvent\\acsevent\\AcsEvent.csproj",
+        "projectUniqueName": "D:\\Source_Code\\AcsEvent\\AcsEvent\\AcsEvent.csproj",
         "projectName": "AcsEvent",
-        "projectPath": "D:\\Source_Code\\AcsEvent\\acsevent\\AcsEvent.csproj",
+        "projectPath": "D:\\Source_Code\\AcsEvent\\AcsEvent\\AcsEvent.csproj",
         "packagesPath": "C:\\Users\\viett\\.nuget\\packages\\",
-        "outputPath": "D:\\Source_Code\\AcsEvent\\acsevent\\obj\\",
+        "outputPath": "D:\\Source_Code\\AcsEvent\\AcsEvent\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fshqhiQTsY4=",
+  "dgSpecHash": "ftv/Lk9VjfM=",
   "success": true,
-  "projectFilePath": "D:\\Source_Code\\AcsEvent\\acsevent\\AcsEvent.csproj",
+  "projectFilePath": "D:\\Source_Code\\AcsEvent\\AcsEvent\\AcsEvent.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\viett\\.nuget\\packages\\automapper\\15.0.1\\automapper.15.0.1.nupkg.sha512",
     "C:\\Users\\viett\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",

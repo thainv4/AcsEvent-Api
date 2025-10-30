@@ -290,3 +290,8 @@ D:\Source_Code\AcsEvent\AcsEvent\obj\Release\net8.0\refint\AcsEvent.dll
 D:\Source_Code\AcsEvent\AcsEvent\obj\Release\net8.0\AcsEvent.pdb
 D:\Source_Code\AcsEvent\AcsEvent\obj\Release\net8.0\AcsEvent.genruntimeconfig.cache
 D:\Source_Code\AcsEvent\AcsEvent\obj\Release\net8.0\ref\AcsEvent.dll
+D:\Source_Code\AcsEvent\AcsEvent\bin\Release\net8.0\publish\appsettings.Development.json
+D:\Source_Code\AcsEvent\AcsEvent\bin\Release\net8.0\publish\appsettings.json
+D:\Source_Code\AcsEvent\AcsEvent\bin\Release\net8.0\publish\web.config
+D:\Source_Code\AcsEvent\AcsEvent\bin\Release\net8.0\publish\AcsEvent.deps.json
+D:\Source_Code\AcsEvent\AcsEvent\bin\Release\net8.0\publish\AcsEvent.runtimeconfig.json

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AcsEvent")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d2e09fb98715d237ebe7118cdcf089adf808138")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe009cb2265b1562f727dbda96181a9c205bd177")]
 [assembly: System.Reflection.AssemblyProductAttribute("AcsEvent")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AcsEvent")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

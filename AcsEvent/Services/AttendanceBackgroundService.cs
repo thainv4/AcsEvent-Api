@@ -9,8 +9,8 @@ namespace AcsEvent.Services
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AttendanceBackgroundService> _logger;
-        private readonly TimeSpan _runTime = new TimeSpan(0, 0, 5, 0); // chạy mỗi 5 phút
-        private bool _hasRunToday = false;
+        private readonly TimeSpan _runTime = TimeSpan.FromMinutes(1); // kiểm tra mỗi 1 phút
+        private bool _hasRunToday;
         private DateTime _lastRunDate = DateTime.MinValue;
 
         public AttendanceBackgroundService(IServiceProvider serviceProvider, ILogger<AttendanceBackgroundService> logger)
@@ -22,28 +22,27 @@ namespace AcsEvent.Services
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("AttendanceBackgroundService is starting...");
-            
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
                     var now = DateTime.Now;
                     _logger.LogInformation($"Background service running at {now}");
-                    
-                    // Reset flag khi sang ngày mới
+
+                    // Nếu sang ngày mới, reset cờ và cập nhật ngày
                     if (_lastRunDate.Date != now.Date)
                     {
                         _hasRunToday = false;
+                        _lastRunDate = now.Date;
                         _logger.LogInformation($"New day detected. Resetting run flag. Current date: {now.Date}");
                     }
 
-                    // Chạy trong khoảng 00:00 đến 00:59 và chưa chạy hôm nay
-                    if (!_hasRunToday) 
+                    // Nếu chưa chạy hôm nay thì chạy job
+                    if (!_hasRunToday)
                     {
                         _logger.LogInformation($"Starting to save yesterday attendance data at {now}");
                         await SaveYesterdayAttendanceAsync();
                         _hasRunToday = true;
-                        _lastRunDate = now.Date;
                         _logger.LogInformation($"Finished saving yesterday attendance data at {DateTime.Now}");
                     }
                 }
@@ -51,11 +50,9 @@ namespace AcsEvent.Services
                 {
                     _logger.LogError(ex, "Error in AttendanceBackgroundService");
                 }
-                
                 _logger.LogInformation($"Waiting {_runTime.TotalMinutes} minutes for next check...");
                 await Task.Delay(_runTime, stoppingToken);
             }
-            
             _logger.LogInformation("AttendanceBackgroundService is stopping...");
         }
 
@@ -64,12 +61,11 @@ namespace AcsEvent.Services
             using var scope = _serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AcsEventDbContext>();
             var attendanceService = scope.ServiceProvider.GetRequiredService<IAttendanceService>();
-            var employeeService = scope.ServiceProvider.GetRequiredService<IEmployeeService>();
             var phongBanService = scope.ServiceProvider.GetRequiredService<IPhongBanService>();
 
             DateTime yesterday = DateTime.Today.AddDays(-1);
             _logger.LogInformation($"Processing attendance data for date: {yesterday.Date}");
-            
+
             var phongBans = await phongBanService.GetPhongBansAsync();
             _logger.LogInformation($"Found {phongBans?.Count() ?? 0} departments");
 
@@ -79,14 +75,14 @@ namespace AcsEvent.Services
 
             foreach (var pb in phongBans)
             {
-                var attendances = await attendanceService.GetAttendanceByPhongBanAsync(pb.MaPb);
+                var attendances = await attendanceService.GetAttendanceByPhongBanAsync(pb.MaPb, yesterday);
                 _logger.LogInformation($"Processing {attendances?.Count() ?? 0} attendance records for department: {pb.MaPb}");
-                
+
                 foreach (var att in attendances)
                 {
                     totalRecordsProcessed++;
-                    
-                    // Quy định giờ làm: 08:00 sáng, 17:00 chiều
+
+                    // Quy định giờ làm: 07:30 sáng, 16:30 chiều
                     var quyDinhSang = new TimeSpan(7, 30, 0);
                     var quyDinhChieu = new TimeSpan(16, 30, 0);
                     bool diMuon = false;
@@ -111,7 +107,7 @@ namespace AcsEvent.Services
                         if (existing != null)
                         {
                             existing.TimeIn = att.FirstIn;
-                            existing.TimeOut = att.LastOut;
+                            existing.TimeOut = att.LastOut; // Ensure TimeOut is updated
                             existing.DiMuon = diMuon;
                             existing.VeSom = veSom;
                             await dbContext.SaveChangesAsync();
@@ -125,7 +121,7 @@ namespace AcsEvent.Services
                                 MaNV = att.Manv,
                                 Name = att.Name,
                                 TimeIn = att.FirstIn,
-                                TimeOut = att.LastOut,
+                                TimeOut = att.LastOut, // Ensure TimeOut is added
                                 DiMuon = diMuon,
                                 VeSom = veSom
                             });
@@ -140,7 +136,7 @@ namespace AcsEvent.Services
                     }
                 }
             }
-            
+
             _logger.LogInformation($"Attendance processing completed. Total: {totalRecordsProcessed}, Added: {totalRecordsAdded}, Updated: {totalRecordsUpdated}");
         }
     }
