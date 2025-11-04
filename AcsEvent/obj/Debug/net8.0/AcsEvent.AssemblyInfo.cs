@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AcsEvent")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe009cb2265b1562f727dbda96181a9c205bd177")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+53ccb5f0c9b857a24c212cc8ebbfda3d250e13c0")]
 [assembly: System.Reflection.AssemblyProductAttribute("AcsEvent")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AcsEvent")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
