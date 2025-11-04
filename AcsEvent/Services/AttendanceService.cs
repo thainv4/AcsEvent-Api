@@ -2,28 +2,31 @@ using System.Text.Json;
 using AcsEvent.Context;
 using AcsEvent.DTOs.AcsEvent;
 using AcsEvent.Interface;
-using AcsEvent.Models;
 using Microsoft.EntityFrameworkCore;
+using AcsEvent.Entities;
 
 namespace AcsEvent.Services;
 
-public class AttendanceService : IAttendanceService                                                                                                                   
+public class AttendanceService : IAttendanceService
 {
     private readonly HikvisionService _hikvisionService;
     private readonly ThietBiService _thietBiService;
     private readonly IEmployeeService _employeeService;
     private readonly ILogger<AttendanceService> _logger;
+    private readonly AcsEventDbContext _context;
 
     public AttendanceService(
         HikvisionService hikvisionService,
         ThietBiService thietBiService,
         IEmployeeService employeeService,
-        ILogger<AttendanceService> logger)
+        ILogger<AttendanceService> logger,
+        AcsEventDbContext context)
     {
         _hikvisionService = hikvisionService;
         _thietBiService = thietBiService;
         _employeeService = employeeService;
         _logger = logger;
+        _context = context;
     }
     
     public async Task<List<AttendanceResponseDto>> GetAttendanceByPhongBanAsync(int phongBanId, DateTime? date = null)
@@ -220,5 +223,84 @@ public class AttendanceService : IAttendanceService
             throw;
         }
     }*/
-    
+
+    public async Task<List<AttendanceResponseDto>> GetAttendanceByEmployeeAndDateRangeAsync(string employeeName, DateTime startDate, DateTime endDate)
+    {
+        // Validate range
+        if (endDate < startDate)
+        {
+            _logger.LogWarning("endDate is earlier than startDate in GetAttendanceByEmployeeAndDateRangeAsync");
+            return new List<AttendanceResponseDto>();
+        }
+
+        // Find employees by HoTen contains (employeeName is HoTen in EmployeeInfo)
+        var employeeInfos = await _context.Set<EmployeeInfo>()
+            .AsNoTracking()
+            .Where(e => e.HoTen != null && EF.Functions.Like(e.HoTen, $"%{employeeName}%"))
+            .Select(e => new { e.MaNV, e.HoTen })
+            .ToListAsync();
+
+        if (employeeInfos.Count == 0)
+        {
+            _logger.LogWarning("No employees matched for id or name {EmployeeName}", employeeName);
+            return new List<AttendanceResponseDto>();
+        }
+
+        var nameByMaNv = employeeInfos
+            .GroupBy(e => e.MaNV)
+            .ToDictionary(g => g.Key, g => g.First().HoTen);
+
+        var maNvList = nameByMaNv.Keys.ToList();
+
+        // Normalize date range to DateTimeOffset (local offset)
+        var start = new DateTimeOffset(startDate);
+        var end = new DateTimeOffset(endDate);
+
+        // Fetch all attendance rows for matched employees in range
+        var rows = await _context.CheckInOuts
+            .AsNoTracking()
+            .Where(c => maNvList.Contains(c.MaNV) &&
+                        (
+                            (c.TimeIn.HasValue && c.TimeIn.Value >= start && c.TimeIn.Value <= end) ||
+                            (c.TimeOut.HasValue && c.TimeOut.Value >= start && c.TimeOut.Value <= end)
+                        ))
+            .ToListAsync();
+
+        var result = rows
+            .Select(r => new
+            {
+                r.MaNV,
+                Date = (r.TimeIn ?? r.TimeOut)!.Value.Date,
+                In = r.TimeIn,
+                Out = r.TimeOut
+            })
+            .GroupBy(x => new { x.MaNV, x.Date })
+            .Select(g =>
+            {
+                var firstIn = g.Where(x => x.In.HasValue).Select(x => (DateTimeOffset?)x.In.Value).OrderBy(v => v).FirstOrDefault();
+                var lastOut = g.Where(x => x.Out.HasValue).Select(x => (DateTimeOffset?)x.Out.Value).OrderByDescending(v => v).FirstOrDefault();
+
+                var sampleOffset = firstIn?.Offset ?? lastOut?.Offset ?? TimeSpan.Zero;
+                var d = g.Key.Date;
+                var dateMidnight = new DateTimeOffset(d.Year, d.Month, d.Day, 0, 0, 0, sampleOffset);
+
+                return new AttendanceResponseDto
+                {
+                    Manv = g.Key.MaNV,
+                    Name = nameByMaNv.TryGetValue(g.Key.MaNV, out var n) ? n : string.Empty,
+                    Date = dateMidnight,
+                    FirstIn = firstIn,
+                    LastOut = lastOut
+                };
+            })
+            .OrderBy(item =>
+            {
+                string[] nameParts = item.Name?.Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+                return nameParts.Length > 0 ? nameParts[^1] : item.Name;
+            })
+            .ThenBy(r => r.Date)
+            .ToList();
+
+        return result;
+    }
 }

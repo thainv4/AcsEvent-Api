@@ -1,9 +1,7 @@
-using System.Text.Json;
-using AcsEvent.DTOs.AcsEvent;
 using AcsEvent.Helpers;
 using AcsEvent.Interface;
-using AcsEvent.Services;
 using Microsoft.AspNetCore.Mvc;
+using AcsEvent.DTOs.AcsEvent;
 
 namespace AcsEvent.Controllers;
 
@@ -18,7 +16,7 @@ public class AcsEventController : ControllerBase
         IAttendanceService attendanceService,
         ILogger<AcsEventController> logger)
     {
-        _attendanceService = attendanceService;       
+        _attendanceService = attendanceService;
         _logger = logger;
     }
 
@@ -64,6 +62,52 @@ public class AcsEventController : ControllerBase
                 success = false,
                 error = ex.Message
             });
+        }
+    }
+
+    [HttpPost("GetAttendanceByEmployeeNameAndDateRange")]
+    public async Task<IActionResult> GetAttendanceByEmployeeNameAndDateRange([FromBody] AttendanceRangeRequest request)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (string.IsNullOrWhiteSpace(request.EmployeeName))
+            {
+                return BadRequest(new { Message = "employeeId is required." });
+            }
+
+            if (request.StartTime == default || request.EndTime == default)
+            {
+                return BadRequest(new { Message = "startTime and endTime are required and must be valid dates." });
+            }
+
+            if (request.StartTime > request.EndTime)
+            {
+                return BadRequest(new { Message = "startTime must be less than or equal to endTime." });
+            }
+
+            var attendance = await _attendanceService.GetAttendanceByEmployeeAndDateRangeAsync(
+                request.EmployeeName,
+                request.StartTime,
+                request.EndTime);
+
+            if (attendance == null || attendance.Count == 0)
+            {
+                return NotFound(new
+                    { Message = "No attendance data found for the specified employee and time range." });
+            }
+
+            return Ok(attendance);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching attendance data for employee {EmployeeName} between {Start} and {End}",
+                request.EmployeeName, request.StartTime, request.EndTime);
+            return StatusCode(500, new { Message = "An error occurred while fetching attendance data." });
         }
     }
 }
